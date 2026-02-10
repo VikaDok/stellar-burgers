@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { OrderStatusProps } from './type';
 import { OrderStatusUI } from '@ui';
 
@@ -9,17 +9,13 @@ const statusText: { [key: string]: string } = {
 };
 
 export const OrderStatus: FC<OrderStatusProps> = ({ status }) => {
-  let textStyle = '';
-  switch (status) {
-    case 'pending':
-      textStyle = '#E52B1A';
-      break;
-    case 'done':
-      textStyle = '#00CCCC';
-      break;
-    default:
-      textStyle = '#F2F2F3';
-  }
+  const statusMap: { [key: string]: { text: string; color: string } } = {
+    pending: { text: 'Готовится', color: '#E52B1A' },
+    done: { text: 'Выполнен', color: '#00CCCC' },
+    created: { text: 'Создан', color: '#F2F2F3' }
+  };
 
-  return <OrderStatusUI textStyle={textStyle} text={statusText[textStyle]} />;
+  const statusData = statusMap[status] || { text: status, color: '#F2F2F3' };
+
+  return <OrderStatusUI textStyle={statusData.color} text={statusData.text} />;
 };
