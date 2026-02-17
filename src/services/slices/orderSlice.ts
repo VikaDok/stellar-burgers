@@ -100,4 +100,5 @@ const orderSlice = createSlice({
 });
 
 export const { clearOrder } = orderSlice.actions;
+export { initialState };
 export default orderSlice.reducer;

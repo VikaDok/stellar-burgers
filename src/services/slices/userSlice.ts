@@ -168,4 +168,5 @@ const userSlice = createSlice({
 });
 
 export const { setAuthChecked, setUser, clearError } = userSlice.actions;
+export { initialState };
 export default userSlice.reducer;

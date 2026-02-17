@@ -47,4 +47,5 @@ const feedSlice = createSlice({
 });
 
 export const { clearFeedError } = feedSlice.actions;
+export { initialState };
 export default feedSlice.reducer;

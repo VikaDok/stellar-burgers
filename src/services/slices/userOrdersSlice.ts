@@ -60,4 +60,5 @@ const userOrdersSlice = createSlice({
 
 export const { clearUserOrdersError, clearUserOrders } =
   userOrdersSlice.actions;
+export { initialState };
 export default userOrdersSlice.reducer;
