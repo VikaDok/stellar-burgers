@@ -4,35 +4,57 @@ import ingredientsReducer, {
   clearConstructorError
 } from '../ingredientsSlice';
 
-// Моковые данные (убрал __v, так как его нет в TIngredient)
+// Константы для ингредиентов
+const BUN_ID = '1';
+const BUN_NAME = 'Краторная булка';
+const BUN_TYPE = 'bun';
+const BUN_PRICE = 1255;
+const BUN_PROTEINS = 80;
+const BUN_FAT = 24;
+const BUN_CARBS = 53;
+const BUN_CALORIES = 420;
+
+const MAIN_ID = '2';
+const MAIN_NAME = 'Биокотлета';
+const MAIN_TYPE = 'main';
+const MAIN_PRICE = 424;
+const MAIN_PROTEINS = 420;
+const MAIN_FAT = 142;
+const MAIN_CARBS = 242;
+const MAIN_CALORIES = 4242;
+
+// Моковые данные
 const mockIngredients = [
   {
-    _id: '1',
-    name: 'Краторная булка',
-    type: 'bun',
-    price: 1255,
-    proteins: 80,
-    fat: 24,
-    carbohydrates: 53,
-    calories: 420,
+    _id: BUN_ID,
+    name: BUN_NAME,
+    type: BUN_TYPE,
+    price: BUN_PRICE,
+    proteins: BUN_PROTEINS,
+    fat: BUN_FAT,
+    carbohydrates: BUN_CARBS,
+    calories: BUN_CALORIES,
     image: '',
     image_mobile: '',
     image_large: ''
   },
   {
-    _id: '2',
-    name: 'Биокотлета',
-    type: 'main',
-    price: 424,
-    proteins: 420,
-    fat: 142,
-    carbohydrates: 242,
-    calories: 4242,
+    _id: MAIN_ID,
+    name: MAIN_NAME,
+    type: MAIN_TYPE,
+    price: MAIN_PRICE,
+    proteins: MAIN_PROTEINS,
+    fat: MAIN_FAT,
+    carbohydrates: MAIN_CARBS,
+    calories: MAIN_CALORIES,
     image: '',
     image_mobile: '',
     image_large: ''
   }
 ];
+
+// Константы для сообщений
+const ERROR_MESSAGE = 'Ошибка загрузки';
 
 describe('ingredientsSlice', () => {
   // 1. Начальное состояние
@@ -62,12 +84,12 @@ describe('ingredientsSlice', () => {
   it('должен обрабатывать getIngredients.rejected', () => {
     const errorAction = {
       type: getIngredients.rejected.type,
-      error: { message: 'Ошибка загрузки' }
+      error: { message: ERROR_MESSAGE }
     };
     const state = ingredientsReducer(initialState, errorAction);
     
     expect(state.isLoading).toBe(false);
-    expect(state.error).toBe('Ошибка загрузки');
+    expect(state.error).toBe(ERROR_MESSAGE);
     expect(state.ingredients).toEqual([]);
   });
 
@@ -76,11 +98,11 @@ describe('ingredientsSlice', () => {
     // Сначала создаём состояние с ошибкой
     const errorAction = {
       type: getIngredients.rejected.type,
-      error: { message: 'Ошибка загрузки' }
+      error: { message: ERROR_MESSAGE }
     };
     const stateWithError = ingredientsReducer(initialState, errorAction);
     
-    expect(stateWithError.error).toBe('Ошибка загрузки');
+    expect(stateWithError.error).toBe(ERROR_MESSAGE);
     
     // Вызываем экшен очистки
     const newState = ingredientsReducer(stateWithError, clearConstructorError());

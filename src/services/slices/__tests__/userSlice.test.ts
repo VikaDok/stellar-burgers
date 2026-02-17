@@ -28,17 +28,23 @@ global.localStorage = {
   key: jest.fn()
 } as any;
 
+// Константы для пользователя
+const USER_EMAIL = 'test@example.com';
+const USER_NAME = 'Test User';
+const ACCESS_TOKEN = 'Bearer mock-token';
+const REFRESH_TOKEN = 'mock-refresh-token';
+
 // Моковые данные пользователя
 const mockUser = {
-  email: 'test@example.com',
-  name: 'Test User'
+  email: USER_EMAIL,
+  name: USER_NAME
 };
 
 const mockLoginResponse = {
   success: true,
   user: mockUser,
-  accessToken: 'Bearer mock-token',
-  refreshToken: 'mock-refresh-token'
+  accessToken: ACCESS_TOKEN,
+  refreshToken: REFRESH_TOKEN
 };
 
 const mockRegisterResponse = {
@@ -55,6 +61,14 @@ const mockGetUserResponse = {
   success: true,
   user: mockUser
 };
+
+// Константы для сообщений об ошибках
+const ERROR_LOGIN = 'Ошибка входа';
+const ERROR_REGISTER = 'Ошибка регистрации';
+const ERROR_LOGOUT = 'Ошибка выхода';
+const ERROR_GET_USER = 'Не удалось получить пользователя';
+const ERROR_UPDATE = 'Ошибка обновления';
+const DEFAULT_ERROR = 'Some error';
 
 describe('userSlice', () => {
   // 1. Начальное состояние
@@ -93,15 +107,14 @@ describe('userSlice', () => {
         let state = userReducer(initialState, { type: userLogin.pending.type });
         
         // Затем rejected
-        const errorMessage = 'Ошибка входа';
         const rejectedAction = {
           type: userLogin.rejected.type,
-          error: { message: errorMessage }
+          error: { message: ERROR_LOGIN }
         };
         state = userReducer(state, rejectedAction);
         
         expect(state.isLoading).toBe(false);
-        expect(state.error).toBe(errorMessage);
+        expect(state.error).toBe(ERROR_LOGIN);
         expect(state.user).toBeNull();
       });
 
@@ -112,7 +125,7 @@ describe('userSlice', () => {
         };
         const state = userReducer(initialState, rejectedAction);
         
-        expect(state.error).toBe('Ошибка входа');
+        expect(state.error).toBe(ERROR_LOGIN);
       });
     });
 
@@ -146,15 +159,14 @@ describe('userSlice', () => {
         let state = userReducer(initialState, { type: userRegister.pending.type });
         
         // Затем rejected
-        const errorMessage = 'Ошибка регистрации';
         const rejectedAction = {
           type: userRegister.rejected.type,
-          error: { message: errorMessage }
+          error: { message: ERROR_REGISTER }
         };
         state = userReducer(state, rejectedAction);
         
         expect(state.isLoading).toBe(false);
-        expect(state.error).toBe(errorMessage);
+        expect(state.error).toBe(ERROR_REGISTER);
         expect(state.user).toBeNull();
       });
 
@@ -165,7 +177,7 @@ describe('userSlice', () => {
         };
         const state = userReducer(initialState, rejectedAction);
         
-        expect(state.error).toBe('Ошибка регистрации');
+        expect(state.error).toBe(ERROR_REGISTER);
       });
     });
 
@@ -207,15 +219,14 @@ describe('userSlice', () => {
         let state = userReducer(initialState, { type: userLogout.pending.type });
         
         // Затем rejected
-        const errorMessage = 'Ошибка выхода';
         const rejectedAction = {
           type: userLogout.rejected.type,
-          error: { message: errorMessage }
+          error: { message: ERROR_LOGOUT }
         };
         state = userReducer(state, rejectedAction);
         
         expect(state.isLoading).toBe(false);
-        expect(state.error).toBe(errorMessage);
+        expect(state.error).toBe(ERROR_LOGOUT);
       });
 
       it('должен обрабатывать стандартное сообщение об ошибке при logout', () => {
@@ -225,7 +236,7 @@ describe('userSlice', () => {
         };
         const state = userReducer(initialState, rejectedAction);
         
-        expect(state.error).toBe('Ошибка выхода');
+        expect(state.error).toBe(ERROR_LOGOUT);
       });
     });
 
@@ -259,15 +270,14 @@ describe('userSlice', () => {
         let state = userReducer(initialState, { type: getUser.pending.type });
         
         // Затем rejected
-        const errorMessage = 'Не удалось получить пользователя';
         const rejectedAction = {
           type: getUser.rejected.type,
-          error: { message: errorMessage }
+          error: { message: ERROR_GET_USER }
         };
         state = userReducer(state, rejectedAction);
         
         expect(state.isLoading).toBe(false);
-        expect(state.error).toBe(errorMessage);
+        expect(state.error).toBe(ERROR_GET_USER);
         expect(state.user).toBeNull();
       });
 
@@ -278,7 +288,7 @@ describe('userSlice', () => {
         };
         const state = userReducer(initialState, rejectedAction);
         
-        expect(state.error).toBe('Не удалось получить пользователя');
+        expect(state.error).toBe(ERROR_GET_USER);
       });
     });
 
@@ -312,15 +322,14 @@ describe('userSlice', () => {
         let state = userReducer(initialState, { type: userUpdate.pending.type });
         
         // Затем rejected
-        const errorMessage = 'Ошибка обновления';
         const rejectedAction = {
           type: userUpdate.rejected.type,
-          error: { message: errorMessage }
+          error: { message: ERROR_UPDATE }
         };
         state = userReducer(state, rejectedAction);
         
         expect(state.isLoading).toBe(false);
-        expect(state.error).toBe(errorMessage);
+        expect(state.error).toBe(ERROR_UPDATE);
         expect(state.user).toBeNull();
       });
 
@@ -331,7 +340,7 @@ describe('userSlice', () => {
         };
         const state = userReducer(initialState, rejectedAction);
         
-        expect(state.error).toBe('Ошибка обновления');
+        expect(state.error).toBe(ERROR_UPDATE);
       });
     });
 
@@ -407,7 +416,7 @@ describe('userSlice', () => {
           ...initialState,
           user: mockUser,
           isLoading: true,
-          error: 'Some error'
+          error: DEFAULT_ERROR
         };
         
         const action = setAuthChecked(true);
@@ -416,7 +425,7 @@ describe('userSlice', () => {
         expect(state.isAuthChecked).toBe(true);
         expect(state.user).toEqual(mockUser);
         expect(state.isLoading).toBe(true);
-        expect(state.error).toBe('Some error');
+        expect(state.error).toBe(DEFAULT_ERROR);
       });
     });
 
@@ -445,7 +454,7 @@ describe('userSlice', () => {
           ...initialState,
           isAuthChecked: true,
           isLoading: true,
-          error: 'Some error'
+          error: DEFAULT_ERROR
         };
         
         const action = setUser(mockUser);
@@ -454,7 +463,7 @@ describe('userSlice', () => {
         expect(state.user).toEqual(mockUser);
         expect(state.isAuthChecked).toBe(true);
         expect(state.isLoading).toBe(true);
-        expect(state.error).toBe('Some error');
+        expect(state.error).toBe(DEFAULT_ERROR);
       });
     });
 
@@ -462,7 +471,7 @@ describe('userSlice', () => {
       it('должен очищать ошибку', () => {
         const stateWithError = {
           ...initialState,
-          error: 'Some error'
+          error: DEFAULT_ERROR
         };
         
         const action = clearError();

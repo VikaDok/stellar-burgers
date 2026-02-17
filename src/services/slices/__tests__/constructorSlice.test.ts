@@ -4,7 +4,8 @@ import {
   addIngredient,
   deleteIngredient,
   moveIngredient,
-  clearConstructor
+  clearConstructor,
+  initialState
 } from '../constructorSlice';
 import { TConstructorIngredient, TIngredient } from '@utils-types';
 
@@ -20,8 +21,7 @@ const mockBun: TIngredient = {
   calories: 420,
   image: '',
   image_large: '',
-  image_mobile: '',
-//   __v: 0
+  image_mobile: ''
 };
 
 const mockMain: TIngredient = {
@@ -35,8 +35,7 @@ const mockMain: TIngredient = {
   calories: 4242,
   image: '',
   image_large: '',
-  image_mobile: '',
-//   __v: 0
+  image_mobile: ''
 };
 
 const mockSauce: TIngredient = {
@@ -50,8 +49,7 @@ const mockSauce: TIngredient = {
   calories: 200,
   image: '',
   image_large: '',
-  image_mobile: '',
-//   __v: 0
+  image_mobile: ''
 };
 
 // Вспомогательная функция для создания ингредиента конструктора
@@ -59,11 +57,6 @@ const toConstructorIngredient = (ingredient: TIngredient): TConstructorIngredien
   ...ingredient,
   id: `${ingredient._id}-${Date.now()}-${Math.random()}`
 });
-
-const initialState = {
-  bun: null,
-  ingredients: []
-};
 
 describe('constructorSlice', () => {
   it('должен возвращать начальное состояние', () => {

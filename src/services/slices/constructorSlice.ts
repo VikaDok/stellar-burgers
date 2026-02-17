@@ -53,6 +53,7 @@ const constructorSlice = createSlice({
 });
 
 export const burgerReducer = constructorSlice.reducer;
+export { initialState };
 export const {
   addBun,
   addIngredient,

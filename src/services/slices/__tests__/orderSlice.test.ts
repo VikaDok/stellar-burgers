@@ -5,44 +5,63 @@ import orderReducer, {
   initialState
 } from '../orderSlice';
 
-// Моковые данные для заказа
+// Моковые данные для заказа (вынесены в константы)
+const ORDER_ID = 'order-1';
+const ORDER_NUMBER = 12345;
+const ORDER_NAME = 'Space бургер';
+const ORDER_STATUS = 'done';
+const ORDER_INGREDIENTS = ['ingredient-1', 'ingredient-2'];
+const ORDER_CREATED_AT = '2025-01-01T12:00:00.000Z';
+const ORDER_UPDATED_AT = '2025-01-01T12:00:00.000Z';
+
 const mockOrder = {
-  _id: 'order-1',
-  number: 12345,
-  name: 'Space бургер',
-  status: 'done',
-  ingredients: ['ingredient-1', 'ingredient-2'],
-  createdAt: '2025-01-01T12:00:00.000Z',
-  updatedAt: '2025-01-01T12:00:00.000Z'
+  _id: ORDER_ID,
+  number: ORDER_NUMBER,
+  name: ORDER_NAME,
+  status: ORDER_STATUS,
+  ingredients: ORDER_INGREDIENTS,
+  createdAt: ORDER_CREATED_AT,
+  updatedAt: ORDER_UPDATED_AT
 };
 
 const mockOrderResponse = {
   success: true,
   order: mockOrder,
-  name: mockOrder.name
+  name: ORDER_NAME
 };
 
 // Мок для getState
+const BUN_ID = 'bun-1';
+const BUN_NAME = 'Булка';
+const INGREDIENT_1_ID = 'ing-1';
+const INGREDIENT_2_ID = 'ing-2';
+
 const mockStateWithBunAndIngredients = {
   constructor: {
-    bun: { _id: 'bun-1', name: 'Булка' },
-    ingredients: [{ _id: 'ing-1' }, { _id: 'ing-2' }]
+    bun: { _id: BUN_ID, name: BUN_NAME },
+    ingredients: [{ _id: INGREDIENT_1_ID }, { _id: INGREDIENT_2_ID }]
   }
 };
 
 const mockStateWithoutBun = {
   constructor: {
     bun: null,
-    ingredients: [{ _id: 'ing-1' }]
+    ingredients: [{ _id: INGREDIENT_1_ID }]
   }
 };
 
 const mockStateWithoutIngredients = {
   constructor: {
-    bun: { _id: 'bun-1', name: 'Булка' },
+    bun: { _id: BUN_ID, name: BUN_NAME },
     ingredients: []
   }
 };
+
+// Константы для сообщений об ошибках
+const ERROR_CREATE_ORDER = 'Не удалось создать заказ';
+const ERROR_LOADING = 'Ошибка загрузки';
+const ERROR_NO_BUN = 'Выберите булку для заказа';
+const ERROR_NO_INGREDIENTS = 'Добавьте начинку для заказа';
 
 describe('orderSlice', () => {
   // 1. Начальное состояние
@@ -74,7 +93,7 @@ describe('orderSlice', () => {
       
       expect(state.isLoading).toBe(false);
       expect(state.currentOrder).toEqual(mockOrder);
-      expect(state.orderNumber).toBe(mockOrder.number);
+      expect(state.orderNumber).toBe(ORDER_NUMBER);
       expect(state.error).toBeNull();
     });
 
@@ -83,15 +102,14 @@ describe('orderSlice', () => {
       let state = orderReducer(initialState, { type: createOrder.pending.type });
       
       // Затем rejected
-      const errorMessage = 'Не удалось создать заказ';
       const rejectedAction = {
         type: createOrder.rejected.type,
-        error: { message: errorMessage }
+        error: { message: ERROR_CREATE_ORDER }
       };
       state = orderReducer(state, rejectedAction);
       
       expect(state.isLoading).toBe(false);
-      expect(state.error).toBe(errorMessage);
+      expect(state.error).toBe(ERROR_CREATE_ORDER);
       expect(state.currentOrder).toBeNull();
       expect(state.orderNumber).toBeNull();
     });
@@ -127,15 +145,14 @@ describe('orderSlice', () => {
       let state = orderReducer(initialState, { type: getOrderByNumber.pending.type });
       
       // Затем rejected
-      const errorMessage = 'Ошибка загрузки';
       const rejectedAction = {
         type: getOrderByNumber.rejected.type,
-        error: { message: errorMessage }
+        error: { message: ERROR_LOADING }
       };
       state = orderReducer(state, rejectedAction);
       
       expect(state.isLoading).toBe(false);
-      expect(state.error).toBe(errorMessage);
+      expect(state.error).toBe(ERROR_LOADING);
       expect(state.currentOrder).toBeNull();
       expect(state.orderNumber).toBeNull();
     });
@@ -147,13 +164,13 @@ describe('orderSlice', () => {
       };
       const state = orderReducer(initialState, rejectedAction);
       
-      expect(state.error).toBe('Ошибка загрузки'); // значение по умолчанию
+      expect(state.error).toBe(ERROR_LOADING); // значение по умолчанию
     });
   });
 
   describe('Валидация в createOrder', () => {
     it('должен выбрасывать ошибку при отсутствии булки', async () => {
-      const thunk = createOrder(['ing-1']);
+      const thunk = createOrder([INGREDIENT_1_ID]);
       
       try {
         await thunk(
@@ -162,7 +179,7 @@ describe('orderSlice', () => {
           {}
         );
       } catch (error: any) {
-        expect(error.message).toBe('Выберите булку для заказа');
+        expect(error.message).toBe(ERROR_NO_BUN);
       }
     });
 
@@ -176,7 +193,7 @@ describe('orderSlice', () => {
           {}
         );
       } catch (error: any) {
-        expect(error.message).toBe('Добавьте начинку для заказа');
+        expect(error.message).toBe(ERROR_NO_INGREDIENTS);
       }
     });
   });
@@ -185,7 +202,7 @@ describe('orderSlice', () => {
     it('должен очищать currentOrder, orderNumber и error', () => {
       const stateWithData = {
         currentOrder: mockOrder,
-        orderNumber: mockOrder.number,
+        orderNumber: ORDER_NUMBER,
         isLoading: false,
         error: 'Some error'
       };
@@ -201,7 +218,7 @@ describe('orderSlice', () => {
     it('не должен изменять isLoading при очистке', () => {
       const stateWithLoading = {
         currentOrder: mockOrder,
-        orderNumber: mockOrder.number,
+        orderNumber: ORDER_NUMBER,
         isLoading: true,
         error: null
       };

@@ -5,27 +5,48 @@ import userOrdersReducer, {
   initialState
 } from '../userOrdersSlice';
 
+// Константы для заказов
+const ORDER_1_ID = 'order-1';
+const ORDER_1_NUMBER = 12345;
+const ORDER_1_NAME = 'Бургер 1';
+const ORDER_1_STATUS = 'done';
+const ORDER_1_INGREDIENTS = ['ingredient-1', 'ingredient-2'];
+const ORDER_1_CREATED_AT = '2025-01-01T12:00:00.000Z';
+const ORDER_1_UPDATED_AT = '2025-01-01T12:00:00.000Z';
+
+const ORDER_2_ID = 'order-2';
+const ORDER_2_NUMBER = 12346;
+const ORDER_2_NAME = 'Бургер 2';
+const ORDER_2_STATUS = 'pending';
+const ORDER_2_INGREDIENTS = ['ingredient-3', 'ingredient-4'];
+const ORDER_2_CREATED_AT = '2025-01-01T13:00:00.000Z';
+const ORDER_2_UPDATED_AT = '2025-01-01T13:00:00.000Z';
+
 // Моковые данные для заказов
 const mockOrders = [
   {
-    _id: 'order-1',
-    number: 12345,
-    name: 'Бургер 1',
-    status: 'done',
-    ingredients: ['ingredient-1', 'ingredient-2'],
-    createdAt: '2025-01-01T12:00:00.000Z',
-    updatedAt: '2025-01-01T12:00:00.000Z'
+    _id: ORDER_1_ID,
+    number: ORDER_1_NUMBER,
+    name: ORDER_1_NAME,
+    status: ORDER_1_STATUS,
+    ingredients: ORDER_1_INGREDIENTS,
+    createdAt: ORDER_1_CREATED_AT,
+    updatedAt: ORDER_1_UPDATED_AT
   },
   {
-    _id: 'order-2',
-    number: 12346,
-    name: 'Бургер 2',
-    status: 'pending',
-    ingredients: ['ingredient-3', 'ingredient-4'],
-    createdAt: '2025-01-01T13:00:00.000Z',
-    updatedAt: '2025-01-01T13:00:00.000Z'
+    _id: ORDER_2_ID,
+    number: ORDER_2_NUMBER,
+    name: ORDER_2_NAME,
+    status: ORDER_2_STATUS,
+    ingredients: ORDER_2_INGREDIENTS,
+    createdAt: ORDER_2_CREATED_AT,
+    updatedAt: ORDER_2_UPDATED_AT
   }
 ];
+
+// Константы для сообщений
+const ERROR_LOADING = 'Ошибка загрузки';
+const DEFAULT_ERROR = 'Some error';
 
 describe('userOrdersSlice', () => {
   // 1. Начальное состояние
@@ -64,15 +85,14 @@ describe('userOrdersSlice', () => {
       let state = userOrdersReducer(initialState, { type: fetchUserOrders.pending.type });
       
       // Затем rejected
-      const errorMessage = 'Ошибка загрузки';
       const rejectedAction = {
         type: fetchUserOrders.rejected.type,
-        payload: errorMessage // rejectWithValue передаёт payload
+        payload: ERROR_LOADING // rejectWithValue передаёт payload
       };
       state = userOrdersReducer(state, rejectedAction);
       
       expect(state.isLoading).toBe(false);
-      expect(state.error).toBe(errorMessage);
+      expect(state.error).toBe(ERROR_LOADING);
       expect(state.orders).toEqual([]);
     });
 
@@ -83,7 +103,7 @@ describe('userOrdersSlice', () => {
       };
       const state = userOrdersReducer(initialState, rejectedAction);
       
-      expect(state.error).toBe('Ошибка загрузки');
+      expect(state.error).toBe(ERROR_LOADING);
     });
   });
 
@@ -92,7 +112,7 @@ describe('userOrdersSlice', () => {
       // Создаём состояние с ошибкой
       const stateWithError = {
         ...initialState,
-        error: 'Some error'
+        error: DEFAULT_ERROR
       };
       
       const newState = userOrdersReducer(stateWithError, clearUserOrdersError());
@@ -107,7 +127,7 @@ describe('userOrdersSlice', () => {
       const stateWithData = {
         orders: mockOrders,
         isLoading: true,
-        error: 'Some error'
+        error: DEFAULT_ERROR
       };
       
       const newState = userOrdersReducer(stateWithData, clearUserOrders());

@@ -4,29 +4,31 @@ import feedReducer, {
   initialState
 } from '../feedSlice';
 
+// Моковые данные для заказов (вынесены в константы)
+const MOCK_ORDER_1 = {
+  _id: 'order-1',
+  number: 12345,
+  name: 'Бургер 1',
+  status: 'done',
+  ingredients: ['ingredient-1', 'ingredient-2'],
+  createdAt: '2025-01-01T12:00:00.000Z',
+  updatedAt: '2025-01-01T12:00:00.000Z'
+};
+
+const MOCK_ORDER_2 = {
+  _id: 'order-2',
+  number: 12346,
+  name: 'Бургер 2',
+  status: 'pending',
+  ingredients: ['ingredient-3', 'ingredient-4'],
+  createdAt: '2025-01-01T13:00:00.000Z',
+  updatedAt: '2025-01-01T13:00:00.000Z'
+};
+
 // Моковые данные для ленты заказов
 const mockFeedsData = {
   success: true,
-  orders: [
-    {
-      _id: 'order-1',
-      number: 12345,
-      name: 'Бургер 1',
-      status: 'done',
-      ingredients: ['ingredient-1', 'ingredient-2'],
-      createdAt: '2025-01-01T12:00:00.000Z',
-      updatedAt: '2025-01-01T12:00:00.000Z'
-    },
-    {
-      _id: 'order-2',
-      number: 12346,
-      name: 'Бургер 2',
-      status: 'pending',
-      ingredients: ['ingredient-3', 'ingredient-4'],
-      createdAt: '2025-01-01T13:00:00.000Z',
-      updatedAt: '2025-01-01T13:00:00.000Z'
-    }
-  ],
+  orders: [MOCK_ORDER_1, MOCK_ORDER_2],
   total: 2,
   totalToday: 1
 };
@@ -124,7 +126,7 @@ describe('feedSlice', () => {
       // Загружаем новые данные
       const newMockData = {
         success: true,
-        orders: [mockFeedsData.orders[0]],
+        orders: [MOCK_ORDER_1], // используем константу
         total: 1,
         totalToday: 1
       };
