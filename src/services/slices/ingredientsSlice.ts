@@ -38,10 +38,11 @@ const ingredientsSlice = createSlice({
       })
       .addCase(getIngredients.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.payload as string;
+        state.error = action.error?.message || 'Ошибка загрузки';
       });
   }
 });
 
 export const { clearConstructorError } = ingredientsSlice.actions;
+export { initialState };
 export default ingredientsSlice.reducer;
